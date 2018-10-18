@@ -109,6 +109,29 @@ void normcrossprod(float v1[3], float v2[3], float out[3])
    out[2] = v1[0]*v2[1] - v1[1]*v2[0]; 
    normalize(out); 
 }
+void board(void) {
+	//glClear(GL_COLOR_BUFFER_BIT);
+	int counter = 0;
+	for (GLint x = -80; x < 80; x += 20)
+	{
+		for (GLint z = -80; z < 80; z += 20)
+		{
+			glBegin(GL_POLYGON);
+      if (((x + z) / 20) & 1) {
+				glColor3f(.6, .6, .6);
+			}
+			else {
+				glColor3f(.2, .2, .2);
+			}
+      glVertex3f(x,0,z);
+      glVertex3f(x+20,0,z);
+      glVertex3f(x+20,0,z+20);
+      glVertex3f(x,0,z+20);
+      glEnd();
+		}//end of y		
+	}//end of x   
+
+}
 
 /*Draw object*/
 void DrawIcosahedron(void)
@@ -156,10 +179,11 @@ void initGL()
 {
    glClearColor(0.0, 0.0, 0.0, 1.0); //   Set background (clear) color to black
 
-   glEnable(GL_LIGHTING);   //TODO: UNCOMMENT
-   glEnable(GL_LIGHT0);     //TODO: UNCOMMENT
+   //glEnable(GL_LIGHTING);   //TODO: UNCOMMENT
+   //glEnable(GL_LIGHT0);     //TODO: UNCOMMENT
    glNewList(ObjIcosahedron, GL_COMPILE);	
-      DrawIcosahedron();        //    Draw a object,  
+      //DrawIcosahedron();        //    Draw a object,
+      board();
    glEndList();
 }
 
@@ -213,7 +237,7 @@ void reshape(GLsizei width, GLsizei height) {
    //Adjust vision cone
    //gluOrtho2D(windowAreaXLeft, windowAreaXRight, windowAreaYBottom, windowAreaYTop);
    
-   gluPerspective(60.0, GLfloat(width) / GLfloat(height), 0.5, 500.0); //   Define the shape of your viewing volume using glFrustum function
+   gluPerspective(60.0, GLfloat(width) / GLfloat(height), 0.5, 800.0); //   Define the shape of your viewing volume using glFrustum function
  
    
   
