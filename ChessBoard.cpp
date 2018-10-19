@@ -35,10 +35,12 @@ int windowHeight = 1000;     // Initil Screen and viewport height
 
 GLfloat zValue=80;
 GLfloat xRotated, yRotated, zRotated;
+
 static GLfloat angleTheta[3] = {0.0,0.0,0.0};
 static GLfloat movingPiece[3] = {0.0,0.0,0.0};
 static GLint axis = 2;
 static GLint step = 2;
+
 static GLfloat zRotationPawn = -50.0;
 static GLfloat yRotationKnight = 0;
 static GLfloat yRotationKing = 0;
@@ -46,7 +48,9 @@ static GLfloat zTanslationBishop = -30;
 static GLfloat zShearQueen = 1.57079632679;
 static GLfloat zScaleRook = 1;
 
-
+static GLfloat xvision = 0;
+static GLfloat yvision = 200;
+static GLfloat eyevision = 0;
 
 
 GLfloat MVMatrix[16];
@@ -1178,7 +1182,7 @@ void display()
    glLoadIdentity();              //   Reset model-view matrix
    
    
-   gluLookAt(0.0,300.0,zValue,  0.0,0.0,0.0,   0.0,1.0,0.0);      //  Define camera settings
+   gluLookAt(xvision, yvision, zValue, xvision, 0.0, 0.0, 0.0, 1.0, 0.0);      //  Define camera settings
    /* glPushMatrix();
    glGetFloatv(GL_MODELVIEW_MATRIX,MVMatrix); */
    glGetFloatv(GL_MODELVIEW_MATRIX,MVMatrix2);
@@ -1492,19 +1496,25 @@ Right directional key.
 GLUT_KEY_DOWN
 Down directional key. */
 
-void keyboard(int key, int x, int y){
-  if(key==GLUT_KEY_RIGHT || key==GLUT_KEY_LEFT){
-    step = 0;
-    if(key==GLUT_KEY_RIGHT) movingPiece[step] += 2.0;
-    if(key==GLUT_KEY_LEFT) movingPiece[step] -= 2.0;
-  }
-  if(key==GLUT_KEY_UP || key==GLUT_KEY_DOWN){
-    step = 2;
-    if(key==GLUT_KEY_DOWN) movingPiece[step] += 2.0;
-    if(key==GLUT_KEY_UP) movingPiece[step] -= 2.0;
-  }
+void keyboard(int key, int x, int y) {
+	 int val = 5;
+	 if (key == GLUT_KEY_RIGHT)
+		 xvision += val;
+	 if (key == GLUT_KEY_LEFT)
+		 xvision += -val;
+	 if (key == GLUT_KEY_UP)
+		 yvision += val;
+	 if (key == GLUT_KEY_DOWN)
+		 yvision += -val;
+	 if (key == GLUT_KEY_END)
+		 xvision += val;
+	 if (key == GLUT_KEY_HOME)
+		 xvision -= val;
+	 if (key == GLUT_KEY_INSERT)
+		 zValue += val;
+	 if (key == GLUT_KEY_PAGE_UP)
+		 zValue -= val;
 
-	display();
 
 }
 void keyboard_2(unsigned char key, int x, int y){
@@ -1558,7 +1568,7 @@ int main(int argc, char** argv) {
    glutDisplayFunc(display);     // Register callback handler for window re-paint
    glutReshapeFunc(reshape); 
    glutMouseFunc(mouse);
-   //glutSpecialFunc(keyboard);
+   glutSpecialFunc(keyboard);
    glutKeyboardFunc(keyboard_2);
    initGL();                     // Our own OpenGL initialization
    glutMainLoop();               // Enter event-processing loop
