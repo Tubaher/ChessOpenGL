@@ -40,6 +40,15 @@ static GLfloat movingPiece[3] = {0.0,0.0,0.0};
 static GLint axis = 2;
 static GLint step = 2;
 static GLfloat zRotationPawn = -50.0;
+static GLfloat yRotationKnight = 0;
+static GLfloat yRotationKing = 0;
+static GLfloat zTanslationBishop = -30;
+static GLfloat zShearQueen = 1.57079632679;
+static GLfloat zScaleRook = 1;
+
+
+
+
 GLfloat MVMatrix[16];
 GLfloat MVMatrix2[16];
 GLfloat windowXMax, windowXMin, windowYMax, windowYMin; // window bounds
@@ -224,18 +233,18 @@ GLfloat KingNext[40][3] = {
 
 GLfloat KingCrownCurrent[12][3] = {
 
-{-1, 28 ,0},
-{-1, 31 ,0},
-{-3,30.5,0},
-{-3,33.5,0},
-{-1, 33	,0},
-{-1.2,35,0},
-{1.2, 35,0},
-{1, 33	,0},
-{3, 33.5,0},
-{3, 30.5,0},
-{1, 31	,0},
-{1, 28	,0}
+{-1, 28 ,-2},
+{-1, 31 ,-2},
+{-3,30.5,-2},
+{-3,33.5,-2},
+{-1, 33	,-2},
+{-1.2,35,-2},
+{1.2, 35,-2},
+{1, 33	,-2},
+{3, 33.5,-2},
+{3, 30.5,-2},
+{1, 31	,-2},
+{1, 28	,-2}
 
 };
 
@@ -704,8 +713,8 @@ void board(void) {
 }
 void Knight(void)
 {  
-	int nSlices=4;
-	double dz=PI*0.35;
+	int nSlices=6;
+	double dz=1;
 	int nPoints=61;
 	for (int i=0; i<nSlices;i++)
 	{
@@ -739,7 +748,7 @@ void Knight(void)
 			glVertex3f(knightCurrent[j][0],knightCurrent[j][1],knightCurrent[j][2]);		
 			glVertex3f(knightCurrent[j-1][0],knightCurrent[j-1][1],knightCurrent[j-1][2]);				
 			glVertex3f(knightNext[j-1][0],knightNext[j-1][1],knightNext[j-1][2]);
-			
+			glVertex3f(knightNext[j][0],knightNext[j][1],knightNext[j][2]);
 			
 		   glEnd();
 		}
@@ -751,9 +760,76 @@ void Knight(void)
 			knightCurrent[j][2]=knightNext[j][2];
 		}
 		//glVertex3f(x,y,z);
+    
+    
 	}
 
+  GLfloat rectScannigCurrent[5][3]={
+    {-8,00.00,0.00},
+    {8.000,0.00,0.00},
+    {8.000,0.00,6.00},
+    {-8.00,0.00,6.00},
+    {-8.00,0.00,0.00},
+  };
+  GLfloat rectScannigNext[5][3]={
+    {-8,00.00,0.00},
+    {8.000,0.00,0.00},
+    {8.000,0.00,6.00},
+    {-8.00,0.00,6.00},
+    {-8.00,0.00,0.00},
+  };
 
+  nSlices = 5;
+  double dy = 1;
+  nPoints = 5;
+
+  	for (int i=0; i<nSlices;i++)
+	{
+		
+    		//glVertex3f(x,y,z);
+		glColor3f(0.5f,0.5f,0.5f);
+		
+		glBegin(GL_LINE_STRIP); 
+		for (int j=0; j<nPoints; j++)
+		{
+			double x=rectScannigCurrent[j][0];
+			double y=rectScannigCurrent[j][1];
+			double z=rectScannigCurrent[j][2];
+
+			glVertex3f(x,y,z);
+			
+			double yNext=y+dy;
+			//glVertex3f(xNext,yNext,zNext);
+
+			rectScannigNext[j][1]=yNext;
+			
+		}
+		glEnd(); 
+		for (int j=1; j<nPoints; j++)
+		{
+		   glColor3f(0.5f,0.5f,0.5f);
+		   glBegin(GL_POLYGON); 
+					
+			
+			glVertex3f(rectScannigNext[j][0],rectScannigNext[j][1],rectScannigNext[j][2]);	
+			glVertex3f(rectScannigCurrent[j][0],rectScannigCurrent[j][1],rectScannigCurrent[j][2]);		
+			glVertex3f(rectScannigCurrent[j-1][0],rectScannigCurrent[j-1][1],rectScannigCurrent[j-1][2]);				
+			glVertex3f(rectScannigNext[j-1][0],rectScannigNext[j-1][1],rectScannigNext[j-1][2]);
+			glVertex3f(rectScannigNext[j][0],rectScannigNext[j][1],rectScannigNext[j][2]);
+			
+		   glEnd();
+		}
+	
+		for (int j=0; j<nPoints; j++)
+		{
+			rectScannigCurrent[j][0]=rectScannigNext[j][0];
+			rectScannigCurrent[j][1]=rectScannigNext[j][1];
+			rectScannigCurrent[j][2]=rectScannigNext[j][2];
+		}
+		//glVertex3f(x,y,z);
+    
+    
+	}
         //print matrix
 	/* glGetFloatv(GL_MODELVIEW_MATRIX,MVMatrix);
 	for (int i=0; i<16;i++)
@@ -1174,6 +1250,26 @@ void display()
     1.00000000
   };
   glMultMatrixf(transKnight);
+
+  GLfloat transRotationKnight[16]={
+    cos(yRotationKnight),
+    0.00000000,
+    -sin(yRotationKnight),
+    0.00000000,
+    0.00000000,
+    1.00000000,
+    0.00000000,
+    0.00000000,
+    sin(yRotationKnight),
+    0.00000000,
+    cos(yRotationKnight),
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    1.00000000
+  };
+  glMultMatrixf(transRotationKnight);
   glCallList(knightObject);        //   Draw obj
 
   glLoadIdentity();               //Cargo de nuevo la matriz identidad
@@ -1197,6 +1293,27 @@ void display()
     1.00000000
   };
   glMultMatrixf(transKing);
+  
+  GLfloat transRotationKing[16]={
+	cos(yRotationKing),
+    0.00000000,
+    -sin(yRotationKing),
+    0.00000000,
+    0.00000000,
+    1.00000000,
+    0.00000000,
+    0.00000000,
+	sin(yRotationKing),
+    0.00000000,
+	cos(yRotationKing),
+    0.00000000,
+    0.00000000,
+    0.00000000,
+	  0.00000000,
+    1.00000000
+  };
+  glMultMatrixf(transRotationKing);
+
   glCallList(kingObject);        //   Draw obj
 
   glLoadIdentity();               //Cargo de nuevo la matriz identidad
@@ -1220,6 +1337,26 @@ void display()
     1.00000000
   };
   glMultMatrixf(transQueen);
+
+  GLfloat ShearQueen[16]={
+    1.00000000,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    1.0/tan(zShearQueen),
+    1.00000000,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    1.00000000,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    1.00000000
+  };
+  glMultMatrixf(ShearQueen);
   glCallList(queenObject);        //   Draw obj
 
   glLoadIdentity();               //Cargo de nuevo la matriz identidad
@@ -1237,9 +1374,9 @@ void display()
     0.00000000,
     1.00000000,
     0.00000000,
-  -30.00000000,
+    zTanslationBishop,
     0.00000000,
-  -70.00000000,
+    zTanslationBishop -40,
     1.00000000
   };
   glMultMatrixf(transBishop);
@@ -1266,6 +1403,25 @@ void display()
     1.00000000
   };
   glMultMatrixf(transRook);
+   GLfloat ScaleRook[16]={
+    zScaleRook,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+	 zScaleRook,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+	 zScaleRook,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    0.00000000,
+    1.00000000
+  };
+  glMultMatrixf(ScaleRook);
   glCallList(rookObject);        //   Draw obj
 
   glLoadIdentity();
@@ -1355,8 +1511,37 @@ void keyboard_2(unsigned char key, int x, int y){
   switch (key){
 		case 'p':
 			zRotationPawn += 5.0;
+      if (zRotationPawn == 80)
+				zRotationPawn = -50.0;
 			break;
- 
+
+    case 'c':
+			yRotationKnight += PI * 0.35;
+			break;
+
+    case 'r':
+			zScaleRook += 0.5;
+			if (zScaleRook == 3.0)
+			zScaleRook = 1;
+
+		break;
+
+
+    case 'k':
+			yRotationKing += 10.0;
+			break;
+
+    case 'b':
+			zTanslationBishop += 20;
+		if (zTanslationBishop == 90)
+			zTanslationBishop = -30;
+			
+		break;
+    
+    case 'q':
+			zShearQueen += PI*0.35;
+		break;
+
 		default:
          break;
 	}
