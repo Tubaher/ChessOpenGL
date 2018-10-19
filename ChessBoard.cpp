@@ -39,6 +39,7 @@ static GLfloat angleTheta[3] = {0.0,0.0,0.0};
 static GLfloat movingPiece[3] = {0.0,0.0,0.0};
 static GLint axis = 2;
 static GLint step = 2;
+static GLfloat zRotationPawn = -50.0;
 GLfloat MVMatrix[16];
 GLfloat MVMatrix2[16];
 GLfloat windowXMax, windowXMin, windowYMax, windowYMin; // window bounds
@@ -1146,7 +1147,7 @@ void display()
     0.00000000,
   -70.00000000,
     0.00000000,
-  -50.00000000,
+ zRotationPawn,
     1.00000000
   };
   glMultMatrixf(transPawn);
@@ -1350,6 +1351,19 @@ void keyboard(int key, int x, int y){
 	display();
 
 }
+void keyboard_2(unsigned char key, int x, int y){
+  switch (key){
+		case 'p':
+			zRotationPawn += 5.0;
+			break;
+ 
+		default:
+         break;
+	}
+
+	display();
+
+}
 
 /* Main function: GLUT runs as a console application starting at main() */
 int main(int argc, char** argv) {
@@ -1360,7 +1374,7 @@ int main(int argc, char** argv) {
    glutReshapeFunc(reshape); 
    glutMouseFunc(mouse);
    //glutSpecialFunc(keyboard);
-   //glutKeyboardFunc(keyboard);
+   glutKeyboardFunc(keyboard_2);
    initGL();                     // Our own OpenGL initialization
    glutMainLoop();               // Enter event-processing loop
    return 1;
