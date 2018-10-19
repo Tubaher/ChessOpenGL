@@ -1514,7 +1514,7 @@ void keyboard(int key, int x, int y) {
 		 zValue += val;
 	 if (key == GLUT_KEY_PAGE_UP)
 		 zValue -= val;
-
+   display();
 
 }
 void keyboard_2(unsigned char key, int x, int y){
